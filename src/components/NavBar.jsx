@@ -66,7 +66,7 @@ function NavBar() {
             to="/home"
           >
             <h3>
-              <b>Biker System</b>
+              <b>BM System</b>
             </h3>
           </Link>
 
@@ -108,13 +108,13 @@ function NavBar() {
                 </Link>
               </li>
               <li className="nav-item rounded border-4 m-1">
-                <Link className={navLinkClassName} to="/penalties">
-                  <b>Penalties</b>
+                <Link className={navLinkClassName} to="/compensations_reasons">
+                  <b>Compensation Reasons</b>
                 </Link>
               </li>
               <li className="nav-item rounded border-4 m-1">
-                <Link className={navLinkClassName} to="/compensations_reasons">
-                  <b>Compensation Reasons</b>
+                <Link className={navLinkClassName} to="/penalties">
+                  <b>Penalties</b>
                 </Link>
               </li>
 

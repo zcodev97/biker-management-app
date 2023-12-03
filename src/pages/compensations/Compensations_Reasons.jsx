@@ -5,11 +5,11 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
-import NavBar from "../components/NavBar";
-import { Biker_System_URL } from "../global";
-import NoDataView from "../components/noData";
-import { FormatDateTime } from "../global";
+import Loading from "../../components/Loading";
+import NavBar from "../../components/NavBar";
+import { Biker_System_URL } from "../../global";
+import NoDataView from "../../components/noData";
+import { FormatDateTime } from "../../global";
 
 function CompensationReasonsPage() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ function CompensationReasonsPage() {
 
     fetch(
       Biker_System_URL +
-        "compensation/get_compensation_reasons/?page=1&page_size=50",
+        "compensation/get_compensation_reasons/?page=1&page_size=199",
       {
         method: "GET",
         headers: {
@@ -43,7 +43,7 @@ function CompensationReasonsPage() {
         }
 
         let cols = Object.keys(response.results[0])
-          .filter((i) => i !== "created_by" && i !== "updated_by" && i !== "id")
+
           .map((i, d) => {
             // console.log(response.results[0][i]);
             if (Array.isArray(response.results[0])) {
@@ -66,6 +66,8 @@ function CompensationReasonsPage() {
         Object.values(response.results).map((x) => {
           x.created_at = FormatDateTime(new Date(x.created_at));
           x.updated_at = FormatDateTime(new Date(x.updated_at));
+          x.created_by = x.created_by.username;
+          x.updated_by = x.updated_by.username;
         });
         setData(response.results);
       })
@@ -78,21 +80,20 @@ function CompensationReasonsPage() {
       });
   }
 
-  // const rowEvents = {
-  //   onClick: (e, row, rowIndex) => {
-  //     navigate("/user_details", {
-  //       state: {
-  //         id: row.id,
-  //         email: row.email,
-  //         username: row.username,
-  //         firstName: row.first_name,
-  //         lastName: row.last_name,
-  //         phoneNumber: row.phone_number,
-  //         role: row.role,
-  //       },
-  //     });
-  //   },
-  // };
+  const rowEvents = {
+    onClick: (e, row, rowIndex) => {
+      navigate("/compensation_reason_details", {
+        state: {
+          id: row.id,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          created_by: row.created_by,
+          updated_by: row.updated_by,
+          reason: row.reason,
+        },
+      });
+    },
+  };
 
   const pagination = paginationFactory({
     page: 1,
@@ -125,7 +126,16 @@ function CompensationReasonsPage() {
           <b> Compensations Reasons</b>
         </h3>
       </div>
-
+      <div className="container text-end">
+        <div
+          className="btn btn-light border border-2 p-2 m-2"
+          onClick={() => {
+            navigate("/add_compensation_reason");
+          }}
+        >
+          <b>➕</b>
+        </div>
+      </div>
       <div className="container-fluid bg-light rounded p-1 text-center">
         {fields.length === 0 && data.length === 0 ? (
           "loading"
@@ -138,7 +148,7 @@ function CompensationReasonsPage() {
             data={data}
             pagination={pagination}
             filter={filterFactory()}
-            // rowEvents={rowEvents}
+            rowEvents={rowEvents}
             wrapperClasses="table-responsive"
           />
         )}

@@ -5,13 +5,13 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
-import NavBar from "../components/NavBar";
-import { Biker_System_URL } from "../global";
-import NoDataView from "../components/noData";
-import { FormatDateTime } from "../global";
+import Loading from "../../components/Loading";
+import NavBar from "../../components/NavBar";
+import { Biker_System_URL } from "../../global";
+import NoDataView from "../../components/noData";
+import { FormatDateTime } from "../../global";
 
-function PenaltiesPage() {
+function PenaltyReasonsPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
@@ -22,7 +22,7 @@ function PenaltiesPage() {
     var token = localStorage.getItem("token");
 
     fetch(
-      Biker_System_URL + "compensation/get_compensations/?page=1&page_size=50",
+      Biker_System_URL + "penalty/get_penalty_reasons/?page=1&page_size=50",
       {
         method: "GET",
         headers: {
@@ -33,7 +33,7 @@ function PenaltiesPage() {
     )
       .then((response) => response.json())
       .then(async (response) => {
-        console.log(response);
+        // console.log(response);
         if (response.detail) {
           alert(response.detail);
           setLoading(false);
@@ -42,14 +42,7 @@ function PenaltiesPage() {
         }
 
         let cols = Object.keys(response.results[0])
-          .filter(
-            (i) =>
-              i !== "created_by" &&
-              i !== "updated_by" &&
-              i !== "id" &&
-              i !== "biker" &&
-              i !== "reason"
-          )
+
           .map((i, d) => {
             // console.log(response.results[0][i]);
             if (Array.isArray(response.results[0])) {
@@ -68,10 +61,12 @@ function PenaltiesPage() {
           .filter((col) => col !== null);
 
         setFields(cols);
+
         Object.values(response.results).map((x) => {
           x.created_at = FormatDateTime(new Date(x.created_at));
           x.updated_at = FormatDateTime(new Date(x.updated_at));
-          x.date_added = FormatDateTime(new Date(x.date_added));
+          x.created_by = x.created_by.username;
+          x.updated_by = x.updated_by.username;
         });
         setData(response.results);
       })
@@ -84,21 +79,20 @@ function PenaltiesPage() {
       });
   }
 
-  // const rowEvents = {
-  //   onClick: (e, row, rowIndex) => {
-  //     navigate("/user_details", {
-  //       state: {
-  //         id: row.id,
-  //         email: row.email,
-  //         username: row.username,
-  //         firstName: row.first_name,
-  //         lastName: row.last_name,
-  //         phoneNumber: row.phone_number,
-  //         role: row.role,
-  //       },
-  //     });
-  //   },
-  // };
+  const rowEvents = {
+    onClick: (e, row, rowIndex) => {
+      navigate("/penalty_reason_details", {
+        state: {
+          id: row.id,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+          created_by: row.created_by,
+          updated_by: row.updated_by,
+          reason: row.reason,
+        },
+      });
+    },
+  };
 
   const pagination = paginationFactory({
     page: 1,
@@ -128,10 +122,19 @@ function PenaltiesPage() {
       <NavBar />
       <div className="container p-2 mt-2   border-2 border-bottom border-primary text-dark rounded">
         <h3 className="text-center">
-          <b> Penalties</b>
+          <b> Penalties Reasons</b>
         </h3>
       </div>
-
+      <div className="container text-end">
+        <div
+          className="btn btn-light border border-2 p-2 m-2"
+          onClick={() => {
+            navigate("/add_penalty_reason");
+          }}
+        >
+          <b>➕</b>
+        </div>
+      </div>
       <div className="container-fluid bg-light rounded p-1 text-center">
         {fields.length === 0 && data.length === 0 ? (
           "loading"
@@ -144,7 +147,7 @@ function PenaltiesPage() {
             data={data}
             pagination={pagination}
             filter={filterFactory()}
-            // rowEvents={rowEvents}
+            rowEvents={rowEvents}
             wrapperClasses="table-responsive"
           />
         )}
@@ -153,10 +156,4 @@ function PenaltiesPage() {
   );
 }
 
-export default PenaltiesPage;
-
-// WITH NumberedReadings AS
-// ( SELECT "Info", "Time", "Received", ROW_NUMBER() OVER(PARTITION BY DATE_TRUNC('hour', "Time"),
-// 															 FLOOR(EXTRACT(minute FROM "Time") / 30) ORDER BY "Time" ASC)
-//  as rn FROM "Readings" WHERE "UnitId" = {Id} AND "Time" BETWEEN $1 AND $2 ) SELECT "Time", "Received", "Info"
-// FROM NumberedReadings WHERE rn = 1 ORDER BY "Time" ASC LIMIT {limit} OFFSET {offset}
+export default PenaltyReasonsPage;

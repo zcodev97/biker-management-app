@@ -5,80 +5,81 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
-import NavBar from "../components/NavBar";
-import { Biker_System_URL } from "../global";
-import NoDataView from "../components/noData";
-import { FormatDateTime } from "../global";
+import Loading from "../../components/Loading";
+import NavBar from "../../components/NavBar";
+import { Biker_System_URL } from "../../global";
+import NoDataView from "../../components/noData";
+import { FormatDateTime } from "../../global";
 
 function BikersPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const [bikers, setBikers] = useState([]);
+  const [fields, setFields] = useState([]);
 
-  const fields = [
-    {
-      dataField: "created_by",
-      text: "Created By",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "updated_by",
-      text: "Updated By",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "created_at",
-      text: "Created At",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "updated_at",
-      text: "Updated At",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "is_active",
-      text: "Is Active",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "is_deleted",
-      text: "Is Deleted",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "biker_request_id",
-      text: "Biker Request Id",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "biker_created_at",
-      text: "Biker Created At",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "biker_fullname",
-      text: "Biker Full Name",
-      sort: true,
-      filter: textFilter(),
-    },
-    {
-      dataField: "phone_number",
-      text: "Phone Number",
-      sort: true,
-      filter: textFilter(),
-    },
-  ];
+  // const fields = [
+  //   {
+  //     dataField: "created_by",
+  //     text: "Created By",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "updated_by",
+  //     text: "Updated By",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "created_at",
+  //     text: "Created At",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "updated_at",
+  //     text: "Updated At",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "is_active",
+  //     text: "Is Active",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "is_deleted",
+  //     text: "Is Deleted",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "biker_request_id",
+  //     text: "Biker Request Id",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "biker_created_at",
+  //     text: "Biker Created At",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "biker_fullname",
+  //     text: "Biker Full Name",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  //   {
+  //     dataField: "phone_number",
+  //     text: "Phone Number",
+  //     sort: true,
+  //     filter: textFilter(),
+  //   },
+  // ];
 
   async function GetAllBikers() {
     setLoading(true);
@@ -121,8 +122,8 @@ function BikersPage() {
           })
           .filter((col) => col !== null);
 
-        // setFields(cols);
-        console.log(response.results);
+        setFields(cols);
+        // console.log(response.results);
         Object.values(response.results).map((x) => {
           x.created_at = FormatDateTime(new Date(x.created_at));
           x.updated_at = FormatDateTime(new Date(x.updated_at));
@@ -191,6 +192,16 @@ function BikersPage() {
         <h3 className="text-center">
           <b> Bikers</b>
         </h3>
+      </div>
+      <div className="container text-end">
+        <div
+          className="btn btn-success p-2 m-2"
+          onClick={() => {
+            navigate("/add_biker");
+          }}
+        >
+          <b>Add Biker</b>
+        </div>
       </div>
 
       <div className="container-fluid bg-light rounded p-1 text-center">

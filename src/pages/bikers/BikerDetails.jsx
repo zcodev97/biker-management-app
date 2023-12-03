@@ -6,10 +6,10 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/Loading";
-import { Biker_System_URL } from "../global";
-import NoDataView from "../components/noData";
-import { FormatDateTime } from "../global";
+import Loading from "../../components/Loading";
+import { Biker_System_URL } from "../../global";
+import NoDataView from "../../components/noData";
+import { FormatDateTime } from "../../global";
 
 function BikerDetailsPage() {
   const location = useLocation();
@@ -190,25 +190,46 @@ function BikerDetailsPage() {
       });
   }
 
-  const rowEvents = {
-    onClick: (e, row, rowIndex) => {
-      navigate("/biker_details", {
-        state: {
-          id: row.id,
-          biker_created_at: row.biker_created_at,
-          biker_fullname: row.biker_fullname,
-          biker_request_id: row.biker_request_id,
-          created_at: row.created_at,
-          created_by: row.created_by,
-          is_active: row.is_active,
-          is_deleted: row.is_deleted,
-          updated_at: row.updated_at,
-          phone_number: row.phone_number,
-          updated_by: row.updated_by,
-        },
-      });
-    },
-  };
+  async function DeleteBiker() {
+    if (window.confirm("Do you want to proceed?")) {
+      setLoading(true);
+      var token = localStorage.getItem("token");
+
+      fetch(
+        Biker_System_URL +
+          "biker/" +
+          location.state.biker_request_id +
+          "/delete/",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then(async (response) => {
+          if (response.detail) {
+            alert(response.detail);
+            setLoading(false);
+            navigate("/bikers", { replace: true });
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+          alert(e);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      alert("You clicked OK. Performing the action...");
+    } else {
+      // User clicked "Cancel"
+      // Do nothing
+      alert("You clicked Cancel. No action will be performed.");
+    }
+  }
 
   const pagination = paginationFactory({
     page: 1,
@@ -232,13 +253,20 @@ function BikerDetailsPage() {
 
   return (
     <>
-      <div
-        className="btn btn-light p-3 m-2"
-        onClick={() => {
-          navigate("/bikers", { replace: true });
-        }}
-      >
-        <b>Back</b>
+      <div className="row">
+        <div className="col-md-6">
+          <div
+            className="btn btn-dark p-3 m-2"
+            onClick={() => {
+              navigate("/bikers", { replace: true });
+            }}
+          >
+            <b>Back</b>
+          </div>
+          <div className="btn btn-danger p-3 m-2" onClick={DeleteBiker}>
+            <b>Delete</b>
+          </div>
+        </div>
       </div>
       <div className={customclassName}>
         <b> ID : </b> {location.state.id}
@@ -252,15 +280,15 @@ function BikerDetailsPage() {
       <div className={customclassName}>
         <b>Updated At: </b> {location.state.updated_at}
       </div>
-      <div className={customclassName}>
+      {/* <div className={customclassName}>
         <b>Updated By: </b> {location.state.updated_by.username}
-      </div>
+      </div> */}
       <div className={customclassName}>
         <b>Biker Full Name: </b> <span> {location.state.biker_fullname}</span>
       </div>
-      <div className={customclassName}>
+      {/* <div className={customclassName}>
         <b>Created By: </b> {location.state.created_by.username}
-      </div>
+      </div> */}
       <div className={customclassName}>
         <b>Biker Request Id: </b> {location.state.biker_request_id}
       </div>
@@ -268,13 +296,13 @@ function BikerDetailsPage() {
         <b>Phone Number: </b> {location.state.phone_number}
       </div>
       <div className="container bg-light rounded p-1 text-center">
+        <div className="container p-4">
+          <h3> Biker Penalities </h3>
+        </div>
         {penalitiesFields.length === 0 && penalities.length === 0 ? (
-          "loading"
+          "NO DATA"
         ) : (
           <>
-            <div className="container p-4">
-              <h3> Biker Penalities </h3>
-            </div>
             <BootstrapTable
               hover={true}
               bordered={true}
@@ -295,7 +323,7 @@ function BikerDetailsPage() {
           <h3> Biker Compensations </h3>
         </div>
         {compensationsFields.length === 0 && compensations.length === 0 ? (
-          "no data"
+          "NO DATA"
         ) : (
           <>
             <BootstrapTable
