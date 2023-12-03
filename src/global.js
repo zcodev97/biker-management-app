@@ -5,7 +5,6 @@ async function Logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     localStorage.removeItem("username");
-
     return true;
   } catch (e) {
     alert(e);
