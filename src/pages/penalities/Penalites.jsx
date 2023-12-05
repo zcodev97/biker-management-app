@@ -30,11 +30,14 @@ function PenaltiesPage() {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        console.log(response);
+        // console.log(response);
         if (response.detail) {
           alert(response.detail);
           setLoading(false);
           navigate("/bikers");
+          return;
+        }
+        if (response.results.length === 0) {
           return;
         }
 
@@ -117,9 +120,9 @@ function PenaltiesPage() {
     return <Loading />;
   }
 
-  if (data.length === 0) {
-    return <NoDataView />;
-  }
+  // if (data.length === 0) {
+  //   return <NoDataView />;
+  // }
 
   return (
     <>
@@ -141,7 +144,7 @@ function PenaltiesPage() {
       </div>
       <div className="container-fluid bg-light rounded p-1 text-center">
         {fields.length === 0 && data.length === 0 ? (
-          "loading"
+          "....."
         ) : (
           <BootstrapTable
             hover={true}

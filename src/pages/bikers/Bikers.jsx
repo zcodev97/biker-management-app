@@ -10,6 +10,7 @@ import NavBar from "../../components/NavBar";
 import { Biker_System_URL } from "../../global";
 import NoDataView from "../../components/noData";
 import { FormatDateTime } from "../../global";
+import Footer from "../../components/footer";
 
 function BikersPage() {
   const [loading, setLoading] = useState(false);
@@ -95,7 +96,7 @@ function BikersPage() {
       .then((response) => response.json())
       .then(async (response) => {
         if (response.detail) {
-          alert(response.detail);
+          // alert(response.detail);
           setLoading(false);
           navigate("/login", { replace: true });
           return;
@@ -123,6 +124,8 @@ function BikersPage() {
           .filter((col) => col !== null);
 
         setFields(cols);
+
+        // console.log(response);
         // console.log(response.results);
         Object.values(response.results).map((x) => {
           x.created_at = FormatDateTime(new Date(x.created_at));
@@ -135,7 +138,7 @@ function BikersPage() {
       })
       .catch((e) => {
         console.log(e);
-        alert(e);
+        // alert(e);
       })
       .finally(() => {
         setLoading(false);
@@ -181,9 +184,9 @@ function BikersPage() {
     return <Loading />;
   }
 
-  if (bikers.length === 0) {
-    return <NoDataView />;
-  }
+  // if (bikers.length === 0) {
+  //   return <NoDataView />;
+  // }
 
   return (
     <>
@@ -221,6 +224,7 @@ function BikersPage() {
           />
         )}
       </div>
+      {/* <Footer /> */}
     </>
   );
 }

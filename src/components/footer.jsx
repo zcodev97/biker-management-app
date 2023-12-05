@@ -2,17 +2,14 @@ function Footer() {
   return (
     <>
       {/* Footer */}
-      <footer className="rounded" style={{ marginTop: "500px" }}>
-        {/* Grid container */}
-        {/* Copyright */}
-        <div className="text-center p-3">
-          {" "}
-          <b>© 2023 Copyright: By Baly BI Team </b>
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            Fixed bottom
+          </a>
         </div>
-        {/* Copyright */}
-      </footer>
+      </nav>
     </>
   );
 }
-
 export default Footer;

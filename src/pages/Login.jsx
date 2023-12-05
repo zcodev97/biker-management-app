@@ -12,7 +12,7 @@ function Login() {
 
   async function checkUserInfo() {
     setLoading(true);
-    await fetch("http://127.0.0.1:8000/api/api/auth/login", {
+    await fetch(Biker_System_URL + "auth/login", {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -25,6 +25,7 @@ function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
+        // console.log(data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("username", data.user.username);
         localStorage.setItem("firstName", data.user.first_name);
@@ -39,7 +40,7 @@ function Login() {
         navigate("/bikers", { replace: true });
       })
       .catch((error) => {
-        alert(error);
+        // alert(error);
         console.log(error);
       })
       .finally(() => {
@@ -61,15 +62,15 @@ function Login() {
     <>
       <form>
         <div className="container-fluid bg-light text-dark p-2 mb-5 text-center rounded"></div>
-        <div className="container w-50 text-center p-4  bg-light text-dark">
+        <div className="container w-50 text-center p-4  bg-dark text-light rounded mb-1">
           <h1>
-            <b>BALY REPORTING SYSTEM </b>
+            <b>Biker Management System </b>
           </h1>
         </div>
-        <div className="container p-4 border rounded text-center text-dark">
-          <h2 className="text-center pt-5">
-            <b>Login Page </b>
-          </h2>
+        <div className="container p-1 w-50 border-bottom border-dark border-3 rounded text-center text-dark">
+          <h1 className="text-center pt-5">
+            <b> Login </b>
+          </h1>
 
           <div className="row d-flex justify-content-center align-items-center p-4 m-1">
             <div className="col-md-6 m-1">
@@ -99,7 +100,7 @@ function Login() {
           </div>
 
           <button
-            className="btn btn-light border boder-light border-2 "
+            className="btn btn-success border boder-light border-2 "
             onClick={async () => {
               await checkUserInfo();
             }}

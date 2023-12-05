@@ -28,14 +28,18 @@ function NavBar() {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          return response.json();
+        })
         .then((data) => {
           // console.log(data);
           setData(data);
           setLoading(false);
         })
         .catch((error) => {
-          alert(error);
+          // alert(error);
+          console.log(error);
         });
     } catch (error) {
       console.log(error);
@@ -45,7 +49,7 @@ function NavBar() {
   }
 
   useEffect(() => {
-    checkUserPermissions();
+    // checkUserPermissions();
   }, []);
 
   if (loading) {
@@ -65,9 +69,9 @@ function NavBar() {
             className="navbar-brand text-primary border border-2 border-dark rounded p-2"
             to="/home"
           >
-            <h3>
-              <b>BM System</b>
-            </h3>
+            <h2>
+              <b>BMS</b>
+            </h2>
           </Link>
 
           {/* Navbar Toggler Button */}

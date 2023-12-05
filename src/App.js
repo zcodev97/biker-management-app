@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
 import HomePage from "./pages/Home";
 import Compensations from "./pages/compensations/Compensations";
 import CompensationReasons from "./pages/compensations/Compensations_Reasons";
@@ -39,7 +38,7 @@ function App() {
       return;
     }
 
-    fetch(Biker_System_URL + "api/auth/user-info", {
+    fetch(Biker_System_URL + "auth/user-info", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +50,8 @@ function App() {
         setLoggedIn(true);
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
+        // alert(error);
       })
       .finally(() => {
         setLoading(false);

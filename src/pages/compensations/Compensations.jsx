@@ -41,6 +41,10 @@ function CompensationsPage() {
           return;
         }
 
+        if (response.results.length === 0) {
+          return;
+        }
+
         let cols = Object.keys(response.results[0])
 
           .map((i, d) => {
@@ -121,9 +125,9 @@ function CompensationsPage() {
     return <Loading />;
   }
 
-  if (data.length === 0) {
-    return <NoDataView />;
-  }
+  // if (data.length === 0) {
+  //   return <NoDataView />;
+  // }
 
   return (
     <>
@@ -147,7 +151,7 @@ function CompensationsPage() {
 
       <div className="container-fluid bg-light rounded p-1 text-center m-1">
         {fields.length === 0 && data.length === 0 ? (
-          "loading"
+          "...."
         ) : (
           <BootstrapTable
             hover={true}

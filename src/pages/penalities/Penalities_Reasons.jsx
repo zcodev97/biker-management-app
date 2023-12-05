@@ -41,6 +41,10 @@ function PenaltyReasonsPage() {
           return;
         }
 
+        if (response.results.length === 0) {
+          return;
+        }
+
         let cols = Object.keys(response.results[0])
 
           .map((i, d) => {
@@ -113,9 +117,9 @@ function PenaltyReasonsPage() {
     return <Loading />;
   }
 
-  if (data.length === 0) {
-    return <NoDataView />;
-  }
+  // if (data.length === 0) {
+  //   return <NoDataView />;
+  // }
 
   return (
     <>
@@ -137,7 +141,7 @@ function PenaltyReasonsPage() {
       </div>
       <div className="container-fluid bg-light rounded p-1 text-center">
         {fields.length === 0 && data.length === 0 ? (
-          "loading"
+          "....."
         ) : (
           <BootstrapTable
             hover={true}
